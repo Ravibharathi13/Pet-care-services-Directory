@@ -1,0 +1,70 @@
+/* User Login - Fresh Professional (Cyan Theme) */
+:root {
+  --user-primary: #06b6d4;   /* cyan */
+  --user-primary-dk: #0891b2;/* darker cyan for hover */
+  --text: #e5e7eb;           /* light text */
+  --text-subtle: #cbd5e1;    /* light subtle */
+  --border: #1f2937;         /* dark border */
+  --ring: rgba(6, 182, 212, 0.28);
+}
+
+.user-login { max-width: 440px; margin: 0 auto; background: #0f172a; border-radius: 16px; box-shadow: 0 12px 34px rgba(0,0,0,0.4); overflow: hidden; border: 1px solid var(--border); }
+
+/* Title & subtitle inside the card header */
+.user-login h1 { color: var(--text); font-weight: 800; font-size: 24px; }
+.user-login p { color: #e2e8f0; font-size: 13px; }
+
+/* Messages */
+.user-login .user-login__message { margin: 16px 24px 0; padding: 12px 14px; border-radius: 12px; display: flex; align-items: center; gap: 10px; font-size: 14px; border: 1px solid transparent; }
+.user-login .user-login__message--error { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+.user-login .user-login__message--success { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+
+/* Form */
+.user-login .user-login__form { padding: 24px 24px 28px; display: grid; gap: 18px; }
+.user-login .user-login__form .form-group { margin: 0; }
+.user-login label { display: block; margin-bottom: 6px; font-size: 13px; color: #e2e8f0; font-weight: 600; }
+
+/* Inputs */
+.user-login input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 14px; outline: none; background: #fff; transition: border-color .2s ease, box-shadow .2s ease; }
+.user-login input::placeholder { color: #94a3b8; }
+.user-login input:hover { border-color: #bae6fd; }
+.user-login input:focus { border-color: var(--user-primary-dk); box-shadow: 0 0 0 4px var(--ring); }
+
+/* Icons inside inputs */
+.user-login .input-icon-wrapper { position: relative; }
+.user-login .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: #9ca3af; pointer-events: none; }
+.user-login .input-with-icon { padding-left: 40px; }
+.user-login .input-icon-wrapper:focus-within .input-icon { color: var(--user-primary-dk); }
+
+/* Forgot link */
+.user-login .user-login__forgot { text-align: right; margin-top: 6px; }
+.user-login .user-login__forgot a { color: #38bdf8; text-decoration: none; font-weight: 600; }
+.user-login .user-login__forgot a:hover { color: #7dd3fc; }
+
+/* Divider */
+.user-login .user-login__divider { margin-top: 12px; display: flex; align-items: center; gap: 12px; }
+.user-login .user-login__divider-line { flex: 1; height: 1px; background: #334155; }
+.user-login .user-login__divider-text { color: var(--text-subtle); font-size: 12px; }
+
+/* Social */
+.user-login .user-login__social-btn { width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 12px; background: #0b1220; color: #e5e7eb; font-size: 14px; cursor: pointer; transition: background .15s ease, color .15s ease; }
+.user-login .user-login__social-btn:hover { background: #111827; }
+.user-login .user-login__social-btn svg { width: 18px; height: 18px; margin-right: 8px; }
+
+/* Primary action */
+.user-login .user-login__submit-btn { width: 100%; padding: 12px 14px; background: var(--user-primary); color: #ffffff; border: none; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: 0 10px 24px rgba(6,182,212,0.35); transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease; display: inline-flex; justify-content: center; align-items: center; }
+.user-login .user-login__submit-btn:hover { background: var(--user-primary-dk); transform: translateY(-1px); box-shadow: 0 12px 28px rgba(6,182,212,0.45); }
+.user-login .user-login__submit-btn[disabled] { opacity: .6; cursor: not-allowed; }
+
+/* Alt actions */
+.user-login .user-login__alt-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; }
+.user-login .user-login__alt-btn--primary { background: #0f172a; color: #fff; border: none; }
+.user-login .user-login__alt-btn--primary:hover { background: #0b1220; }
+.user-login .user-login__alt-btn--outline { background: transparent; color: #334155; border: 1px solid var(--border); }
+.user-login .user-login__alt-btn--outline:hover { background: #f8fafc; }
+
+/* Footer area under the card content (match dark card) */
+.user-login .user-login__footer { padding: 20px 24px; background: #0b1220; border-top: 1px solid #1f2937; color: var(--text-subtle); }
+
+/* Responsive */
+@media (max-width: 640px) { .user-login { max-width: 100%; border-radius: 12px; } .user-login .user-login__form { padding: 20px; } }
