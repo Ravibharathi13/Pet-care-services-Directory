@@ -57,7 +57,7 @@ export default function UserLogin() {
     }
 
     try {
-      const endpoint = isLogin ? 'http://localhost:5000/user/login' : 'http://localhost:5000/user/register';
+      const endpoint = isLogin ? 'https://pet-care-services-directory.onrender.com/user/login' : 'https://pet-care-services-directory.onrender.com/user/register';
       const payload = isLogin 
         ? { email: formData.email, password: formData.password }
         : formData;
