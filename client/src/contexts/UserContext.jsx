@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch('http://localhost:5000/user/me', {
+      const response = await fetch('https://pet-care-services-directory.onrender.com/user/me', {
         credentials: 'include'
       });
       if (response.ok) {
@@ -48,7 +48,7 @@ export const UserProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch('http://localhost:5000/user/logout', {
+      await fetch('https://pet-care-services-directory.onrender.com/user/logout', {
         method: 'POST',
         credentials: 'include'
       });
