@@ -10,7 +10,7 @@ export default function AdminProtectedRoute({ children, redirectTo = "/admin/log
     let active = true;
     const checkAdmin = async () => {
       try {
-        const res = await fetch("http://localhost:5000/auth/me", { credentials: "include" });
+        const res = await fetch("https://pet-care-services-directory.onrender.com/auth/me", { credentials: "include" });
         if (!active) return;
         if (res.ok) {
           setIsAdmin(true);
