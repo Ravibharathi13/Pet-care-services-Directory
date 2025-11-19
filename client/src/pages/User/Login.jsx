@@ -57,29 +57,53 @@ export default function UserLogin() {
     }
 
     try {
-      const endpoint = isLogin ? 'http://localhost:5000/user/login' : 'http://localhost:5000/user/register';
-      const payload = isLogin 
-        ? { email: formData.email, password: formData.password }
-        : formData;
+      if (isLogin) {
+        // 1) Try admin login first
+        try {
+          const adminRes = await fetch('http://localhost:5000/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ email: formData.email, password: formData.password })
+          });
+          // If admin login succeeds, go to admin dashboard
+          if (adminRes.ok) {
+            navigate('/admin', { replace: true });
+            return;
+          }
+        } catch (_) {
+          // Ignore network error here; will attempt user login next
+        }
 
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Update user context with login data
-        login(data.user);
-        // Navigate immediately without showing large success visual
-        navigate(from, { replace: true });
+        // 2) Fallback to normal user login
+        const userRes = await fetch('http://localhost:5000/user/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ email: formData.email, password: formData.password })
+        });
+        const userData = await userRes.json();
+        if (userRes.ok) {
+          login(userData.user);
+          navigate(from, { replace: true });
+        } else {
+          setError(userData.message || 'Authentication failed');
+        }
       } else {
-        setError(data.message || 'Authentication failed');
+        // Registration flow remains unchanged
+        const regRes = await fetch('http://localhost:5000/user/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(formData)
+        });
+        const regData = await regRes.json();
+        if (regRes.ok) {
+          login(regData.user);
+          navigate(from, { replace: true });
+        } else {
+          setError(regData.message || 'Registration failed');
+        }
       }
     } catch (error) {
       console.error('Auth error:', error);
@@ -103,7 +127,7 @@ export default function UserLogin() {
   };
 
   return (
-    <AuthLayout>
+    <AuthLayout headerCentered backgroundImage="/dog2.jpg" backgroundSize="100% 100%" backgroundPosition="center top">
       <div className="user-login">
           {/* Title */}
           <div className="user-login__title" style={{padding: '24px 24px 8px', textAlign: 'center'}}>
@@ -260,10 +284,6 @@ export default function UserLogin() {
                 </button>
               </p>
             )}
-            
-
-
-
             </div>
           </div>
       </AuthLayout>

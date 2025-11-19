@@ -204,7 +204,6 @@ const allCenters = [
   { name: "Virudhunagar Pet Clinic", district: "Virudhunagar", address: "Sivakasi Rd, Virudhunagar, Tamil Nadu 626001", phone: "+91 97917 88990", latitude: 9.5920, longitude: 77.9620, services: "General Pet Care, Grooming", rating: 4.2, hours: "10:00 AM - 8:00 PM" }
 ];
 
-// Pricing catalog to infer costs from free-text `services`
 const PRICING_CATALOG = [
   { key: 'vaccination', name: 'Vaccination', price: 500, unit: 'dose' },
   { key: 'groom', name: 'Grooming', price: 800, unit: 'session' },
@@ -246,7 +245,7 @@ function buildServiceDetailsFromText(text) {
     const key = item.name.toLowerCase();
     if (!seen.has(key)) { seen.add(key); unique.push(item); }
   }
-  // If nothing matched, provide sensible defaults so costs always show
+  
   if (unique.length === 0) {
     return [
       { name: 'Consultation', price: 300, currency: 'INR', unit: 'visit' },

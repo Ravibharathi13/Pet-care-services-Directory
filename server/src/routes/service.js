@@ -24,6 +24,17 @@ router.get("/district/:district", async (req, res) => {
   }
 });
 
+
+router.post("/public", async (req, res) => {
+  try {
+    const service = new Service(req.body);
+    await service.save();
+    return res.status(201).json(service);
+  } catch (err) {
+    return res.status(400).json({ message: "Error adding service", error: err.message });
+  }
+});
+
 // Admin - Add new service
 router.post("/", authMiddleware, async (req, res) => {
   try {

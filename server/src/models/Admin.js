@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
-  password: { type: String }, // hashed password - optional for OAuth users
+  password: { type: String },
   name: { type: String },
-  googleId: { type: String }, // for Google OAuth
+  googleId: { type: String }, 
   authProvider: { type: String, enum: ['local', 'google'], default: 'local' },
   profilePicture: { type: String },
   createdAt: { type: Date, default: Date.now },

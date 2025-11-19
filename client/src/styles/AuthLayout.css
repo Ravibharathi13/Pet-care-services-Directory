@@ -5,10 +5,39 @@
 /* Neutral white header/footer so page colors stand out */
 .auth-layout__header { background: var(--auth-chrome-bg); border-bottom: 1px solid #0f172a; box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
 
-.auth-layout__main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.auth-layout__container { width: 100%; max-width: 520px; }
+.auth-layout__main { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; }
+.auth-bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; filter: saturate(1.05) contrast(1.02); z-index: 0; }
+.auth-layout__container { position: relative; z-index: 2; width: 100%; max-width: 520px; }
 
 .auth-layout__footer { background: var(--auth-chrome-bg); border-top: 1px solid #0f172a; box-shadow: 0 -1px 2px rgba(0,0,0,0.3); }
 .auth-layout__footer-inner { color: #cbd5e1; font-size: 13px; text-align: center; padding: 16px 0; }
 
 @media (max-width: 640px) { .auth-layout__main { padding: 12px; } }
+
+/* Side decorative shapes */
+.auth-decor { position: absolute; inset: 0 auto auto 0; width: 520px; height: 520px; filter: blur(60px); opacity: 0.35; pointer-events: none; }
+.auth-decor--left { left: -260px; top: 10%; background: radial-gradient(closest-side, #22d3ee 0%, rgba(34,211,238,0.0) 70%), radial-gradient(closest-side, #60a5fa 0%, rgba(96,165,250,0.0) 70%); mix-blend-mode: multiply; }
+.auth-decor--right { right: -260px; left: auto; top: 40%; background: radial-gradient(closest-side, #34d399 0%, rgba(52,211,153,0.0) 70%), radial-gradient(closest-side, #a78bfa 0%, rgba(167,139,250,0.0) 70%); mix-blend-mode: multiply; }
+
+@media (max-width: 1024px) {
+  .auth-decor { width: 380px; height: 380px; filter: blur(50px); }
+  .auth-decor--left { left: -200px; top: 8%; }
+  .auth-decor--right { right: -200px; top: 45%; }
+}
+
+@media (max-width: 640px) {
+  .auth-decor { display: none; }
+}
+
+/* Optional side images */
+.auth-decor-img { position: absolute; z-index: 1; width: clamp(280px, 36vw, 560px); height: auto; opacity: 0.28; pointer-events: none; user-select: none; filter: drop-shadow(0 18px 40px rgba(0,0,0,0.25)); }
+.auth-decor-img--left { left: 0; top: 50%; transform: translate(-18%, -45%) rotate(-2deg); }
+.auth-decor-img--right { right: 0; top: 50%; transform: translate(18%, -45%) rotate(2deg); }
+
+@media (max-width: 1024px) {
+  .auth-decor-img { width: clamp(240px, 40vw, 520px); opacity: 0.25; }
+}
+
+@media (max-width: 640px) {
+  .auth-decor-img { display: none; }
+}

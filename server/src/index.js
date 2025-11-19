@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // Import routes
 import serviceRoutes from "./routes/service.js";
@@ -10,7 +12,10 @@ import analyticsRoutes from "./routes/analytics.js";
 import authRoutes from "./routes/auth.js";
 import userAuthRoutes from "./routes/userAuth.js";
 
-dotenv.config(); // load .env file first
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const envPath = path.resolve(__dirname, "../.env");
+dotenv.config({ path: envPath, override: true }); // ensure we load server/.env explicitly
 
 const app = express();
 
@@ -23,9 +28,15 @@ app.use(cookieParser());
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
+let MONGO_URI = process.env.MONGO_URI;
+// Force local Compass connection if env is missing or still Atlas SRV
+if (!MONGO_URI || /^mongodb\+srv:\/\//i.test(MONGO_URI)) {
+  MONGO_URI = "mongodb://localhost:27017/petcare";
+}
 
 // Debugging log
+console.log("🔍 ENV PATH =", envPath);
+console.log("🔍 CWD =", process.cwd());
 console.log("🔍 MONGO_URI =", MONGO_URI);
 
 if (!MONGO_URI) {

@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import App from "./App";
 import Home from "./pages/Home";
-import AdminLogin from "./pages/Admin/AdminLogin";
 import Dashboard from "./pages/Admin/Dashboard";
+import AddAdmin from "./pages/Admin/AddAdmin";
 import UserLogin from "./pages/User/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
@@ -16,7 +16,6 @@ const router = createBrowserRouter(
   [
     // Public routes
     { path: "/login", element: <UserLogin /> },
-    { path: "/admin/login", element: <AdminLogin /> },
 
     // Protected admin routes
     {
@@ -24,6 +23,14 @@ const router = createBrowserRouter(
       element: (
         <AdminProtectedRoute>
           <Dashboard />
+        </AdminProtectedRoute>
+      ),
+    },
+    {
+      path: "/admin/add-admin",
+      element: (
+        <AdminProtectedRoute>
+          <AddAdmin />
         </AdminProtectedRoute>
       ),
     },

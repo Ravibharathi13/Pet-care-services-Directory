@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
-export default function AdminProtectedRoute({ children, redirectTo = "/admin/login" }) {
+export default function AdminProtectedRoute({ children, redirectTo = "/login" }) {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();

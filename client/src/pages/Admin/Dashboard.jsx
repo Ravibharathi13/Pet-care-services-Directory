@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import API from "../../api";
 import Navigation from "../../components/Navigation";
 
@@ -235,8 +236,11 @@ export default function Dashboard(){
       
       {/* Stats Header */}
       <div className="nav">
-        <div className="nav-container">
-          <div></div>
+        <div className="nav-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Link to="/" className="nav-link">🏠 HOME</Link>
+            <Link to="/admin/add-admin" className="nav-link">➕ Add New Admin</Link>
+          </div>
           <div className="stats-header">
             <div className="stat-item">
               <div className="stat-number">{analytics.totalVisits}</div>
@@ -549,6 +553,7 @@ export default function Dashboard(){
               </form>
             </div>
           </div>
+
         </div>
       </div>
     </div>

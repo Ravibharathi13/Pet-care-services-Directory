@@ -26,6 +26,29 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Admin-only: create a new admin
+router.post("/admins", authMiddleware, async (req, res) => {
+  try {
+    const { email, password, name } = req.body || {};
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    const exists = await Admin.findOne({ email });
+    if (exists) {
+      return res.status(400).json({ message: "Admin already exists with this email" });
+    }
+
+    const hashed = await bcrypt.hash(password, 12);
+    const admin = new Admin({ email, password: hashed, name: name || "Admin" });
+    await admin.save();
+
+    return res.status(201).json({ id: admin._id, email: admin.email, name: admin.name });
+  } catch (err) {
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
 // Get current admin (verify JWT)
 router.get("/me", authMiddleware, async (req, res) => {
   try {

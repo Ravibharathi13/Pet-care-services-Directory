@@ -14,6 +14,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (!initialized) {
@@ -23,18 +24,30 @@ export const UserProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await fetch('http://localhost:5000/user/me', {
-        credentials: 'include'
-      });
+      // 1) Check normal user session
+      const response = await fetch('http://localhost:5000/user/me', { credentials: 'include' });
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
+        setIsAdmin(false);
       } else {
         setUser(null);
+        // 2) Fallback: check admin session
+        try {
+          const adminRes = await fetch('http://localhost:5000/auth/me', { credentials: 'include' });
+          if (adminRes.ok) {
+            setIsAdmin(true);
+          } else {
+            setIsAdmin(false);
+          }
+        } catch (_) {
+          setIsAdmin(false);
+        }
       }
     } catch (error) {
       console.log('User not authenticated');
       setUser(null);
+      setIsAdmin(false);
     } finally {
       setLoading(false);
       setInitialized(true);
@@ -43,6 +56,7 @@ export const UserProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
+    setIsAdmin(false);
     setLoading(false);
   };
 
@@ -56,6 +70,7 @@ export const UserProvider = ({ children }) => {
       console.error('Logout error:', error);
     } finally {
       setUser(null);
+      setIsAdmin(false);
       setLoading(false);
     }
   };
@@ -65,7 +80,8 @@ export const UserProvider = ({ children }) => {
     loading,
     login,
     logout,
-    isAuthenticated: !!user && !loading
+    isAdmin,
+    isAuthenticated: (!loading && (!!user || isAdmin))
   };
 
   return (

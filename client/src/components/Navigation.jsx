@@ -43,14 +43,6 @@ export default function Navigation() {
             </Link>
           )}
           
-          {location.pathname !== "/" && (
-            <Link 
-              to="/admin/login" 
-              className={`nav-link ${location.pathname === "/admin/login" ? "active" : ""}`}
-            >
-              🛡️ Admin Login
-            </Link>
-          )}
           {location.pathname.startsWith("/admin") && location.pathname !== "/admin/login" && (
             <Link 
               to="/admin" 
