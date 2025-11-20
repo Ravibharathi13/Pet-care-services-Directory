@@ -16,6 +16,9 @@ export const UserProvider = ({ children }) => {
   const [initialized, setInitialized] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // ✅ API BASE URL FROM CLIENT .env
+  const API = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     if (!initialized) {
       checkAuthStatus();
@@ -24,28 +27,35 @@ export const UserProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      // 1) Check normal user session
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/user/me`, { credentials: 'include' });
+      // ⭐ CHECK USER SESSION
+      const response = await fetch(`${API}/user/me`, {
+        credentials: 'include'
+      });
+
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
         setIsAdmin(false);
       } else {
         setUser(null);
-        // 2) Fallback: check admin session
+
+        // ⭐ CHECK ADMIN SESSION (CORRECT ENDPOINT)
         try {
-          const adminRes = await fetch(`${import.meta.env.VITE_API_URL}/admin/me`, { credentials: 'include' });
+          const adminRes = await fetch(`${API}/admin/me`, {
+            credentials: 'include'
+          });
+
           if (adminRes.ok) {
             setIsAdmin(true);
           } else {
             setIsAdmin(false);
           }
-        } catch (_) {
+        } catch {
           setIsAdmin(false);
         }
       }
     } catch (error) {
-      console.log('User not authenticated');
+      console.log('Auth check failed:', error);
       setUser(null);
       setIsAdmin(false);
     } finally {
@@ -62,11 +72,10 @@ export const UserProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/user/logout`, {
-  method: 'POST',
-  credentials: 'include'
-});
-
+      await fetch(`${API}/user/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      });
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
