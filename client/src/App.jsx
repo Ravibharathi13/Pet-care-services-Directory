@@ -12,7 +12,7 @@ export default function App(){
     if (isAuthenticated && !loading && !hasTracked.current) {
       const trackVisit = async () => {
         try {
-          await fetch('http://localhost:5000/analytics/track', {
+          await fetch('https://pet-care-services-directory-server.onrender.com/analytics/track', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
