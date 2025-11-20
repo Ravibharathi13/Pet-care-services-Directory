@@ -28,11 +28,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
-let MONGO_URI = process.env.MONGO_URI;
-// Force local Compass connection if env is missing or still Atlas SRV
-if (!MONGO_URI || /^mongodb\+srv:\/\//i.test(MONGO_URI)) {
-  MONGO_URI = "mongodb://localhost:27017/petcare";
-}
+const MONGO_URI = process.env.MONGO_URI;
 
 // Debugging log
 console.log("🔍 ENV PATH =", envPath);
