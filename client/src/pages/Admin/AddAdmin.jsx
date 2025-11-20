@@ -29,7 +29,7 @@ export default function AddAdmin() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/auth/admins", {
+      const res = await fetch("https://pet-care-services-directory-server.onrender.com/auth/admins", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
