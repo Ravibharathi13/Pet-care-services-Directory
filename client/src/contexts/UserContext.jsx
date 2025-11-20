@@ -25,7 +25,7 @@ export const UserProvider = ({ children }) => {
   const checkAuthStatus = async () => {
     try {
       // 1) Check normal user session
-      const response = await fetch('https://pet-care-services-directory-server.onrender.com/user/me', { credentials: 'include' });
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/user/me`, { credentials: 'include' });
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
@@ -34,7 +34,7 @@ export const UserProvider = ({ children }) => {
         setUser(null);
         // 2) Fallback: check admin session
         try {
-          const adminRes = await fetch('https://pet-care-services-directory-server.onrender.com/auth/me', { credentials: 'include' });
+          const adminRes = await fetch(`${import.meta.env.VITE_API_URL}/admin/me`, { credentials: 'include' });
           if (adminRes.ok) {
             setIsAdmin(true);
           } else {
@@ -62,10 +62,11 @@ export const UserProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch('https://pet-care-services-directory-server.onrender.com/user/logout', {
-        method: 'POST',
-        credentials: 'include'
-      });
+      await fetch(`${import.meta.env.VITE_API_URL}/user/logout`, {
+  method: 'POST',
+  credentials: 'include'
+});
+
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
