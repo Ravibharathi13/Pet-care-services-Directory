@@ -60,7 +60,7 @@ export default function UserLogin() {
       if (isLogin) {
         // 1) Try admin login first
         try {
-          const adminRes = await fetch('http://localhost:5000/auth/login', {
+          const adminRes = await fetch('https://pet-care-services-directory-server.onrender.com/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -76,7 +76,7 @@ export default function UserLogin() {
         }
 
         // 2) Fallback to normal user login
-        const userRes = await fetch('http://localhost:5000/user/login', {
+        const userRes = await fetch('https://pet-care-services-directory-server.onrender.com/user/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -91,7 +91,7 @@ export default function UserLogin() {
         }
       } else {
         // Registration flow remains unchanged
-        const regRes = await fetch('http://localhost:5000/user/register', {
+        const regRes = await fetch('https://pet-care-services-directory-server.onrender.com/user/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
