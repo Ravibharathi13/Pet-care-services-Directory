@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://pet-care-services-directory-server.onrender.com",
   timeout: 10000,
   withCredentials: true
 });
