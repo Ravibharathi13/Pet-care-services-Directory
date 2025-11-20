@@ -26,69 +26,73 @@ export const UserProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      // Check normal user session
-      const response = await fetch(`${API}/user/me`, { credentials: 'include' });
+      // 1) Check USER session
+      const userRes = await fetch(`${API}/user/me`, { credentials: 'include' });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (userRes.ok) {
+        const data = await userRes.json();
         setUser(data.user);
         setIsAdmin(false);
-        return;
+      } else {
+        setUser(null);
+
+        // 2) Check ADMIN session (old system)
+        const adminRes = await fetch(`${API}/auth/me`, { credentials: 'include' });
+
+        if (adminRes.ok) {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
       }
-
-      // Check admin session (CORRECT ENDPOINT)
-      const adminRes = await fetch(`${API}/auth/me`, { credentials: 'include' });
-
-      if (adminRes.ok) {
-        setIsAdmin(true);
-        return;
-      }
-
-      // No session found
+    } catch (err) {
       setUser(null);
       setIsAdmin(false);
-
-    } catch (error) {
-      console.log("Auth check failed:", error);
-      setUser(null);
-      setIsAdmin(false);
-
     } finally {
       setLoading(false);
       setInitialized(true);
     }
   };
 
-  const login = (userData) => {
-    setUser(userData);
-    setIsAdmin(false);
+  const login = (userData, isAdminLogin = false) => {
+    if (isAdminLogin) {
+      setIsAdmin(true);
+      setUser(null);
+    } else {
+      setUser(userData);
+      setIsAdmin(false);
+    }
+    setLoading(false);
   };
 
   const logout = async () => {
     try {
       await fetch(`${API}/user/logout`, {
-        method: "POST",
-        credentials: "include"
+        method: 'POST',
+        credentials: 'include',
       });
-    } catch (error) {
-      console.log("Logout failed:", error);
-    } finally {
-      setUser(null);
-      setIsAdmin(false);
-    }
+
+      await fetch(`${API}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch (_) {}
+
+    setUser(null);
+    setIsAdmin(false);
+  };
+
+  const value = {
+    user,
+    loading,
+    login,
+    logout,
+    isAdmin,
+    isAuthenticated: (!loading && (!!user || isAdmin)),
   };
 
   return (
-    <UserContext.Provider
-      value={{
-        user,
-        isAdmin,
-        loading,
-        login,
-        logout,
-        isAuthenticated: (!loading && (user || isAdmin))
-      }}
-    >
+    <UserContext.Provider value={value}>
       {children}
     </UserContext.Provider>
   );
