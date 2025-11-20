@@ -21,11 +21,14 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL || "https://pet-care-services-directory-client.onrender.com",
-  credentials: true
+    origin: process.env.CLIENT_URL || "https://pet-care-services-directory-client.onrender.com",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
 }));
+
 app.use(cookieParser());
 app.use(express.json());
+
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
