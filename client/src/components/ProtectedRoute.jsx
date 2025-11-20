@@ -13,7 +13,7 @@ export default function ProtectedRoute({ children, adminOnly = false, redirectTo
     const run = async () => {
       try {
         // 1) Check admin first
-        const adminRes = await fetch("http://localhost:5000/auth/me", { credentials: "include" });
+        const adminRes = await fetch("https://pet-care-services-directory-server.onrender.com/auth/me", { credentials: "include" });
         if (!active) return;
         if (adminRes.ok) {
           setAdminOk(true);
@@ -23,7 +23,7 @@ export default function ProtectedRoute({ children, adminOnly = false, redirectTo
         // 2) If no admin, rely on user context; if empty and not loading, try user/me once
         if (!user && !loading) {
           try {
-            const userRes = await fetch("http://localhost:5000/user/me", { credentials: "include" });
+            const userRes = await fetch("https://pet-care-services-directory-server.onrender.com/user/me", { credentials: "include" });
             if (!active) return;
             if (userRes.ok) {
               const data = await userRes.json();
