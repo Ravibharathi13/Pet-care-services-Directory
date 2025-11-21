@@ -16,8 +16,6 @@ export const UserProvider = ({ children }) => {
   const [initialized, setInitialized] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const API = import.meta.env.VITE_API_URL;
-
   useEffect(() => {
     if (!initialized) {
       checkAuthStatus();
@@ -26,26 +24,28 @@ export const UserProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      // 1) Check USER session
-      const userRes = await fetch(`${API}/user/me`, { credentials: 'include' });
-
-      if (userRes.ok) {
-        const data = await userRes.json();
+      // 1) Check normal user session
+      const response = await fetch('http://localhost:5000/user/me', { credentials: 'include' });
+      if (response.ok) {
+        const data = await response.json();
         setUser(data.user);
         setIsAdmin(false);
       } else {
         setUser(null);
-
-        // 2) Check ADMIN session (old system)
-        const adminRes = await fetch(`${API}/auth/me`, { credentials: 'include' });
-
-        if (adminRes.ok) {
-          setIsAdmin(true);
-        } else {
+        // 2) Fallback: check admin session
+        try {
+          const adminRes = await fetch('http://localhost:5000/auth/me', { credentials: 'include' });
+          if (adminRes.ok) {
+            setIsAdmin(true);
+          } else {
+            setIsAdmin(false);
+          }
+        } catch (_) {
           setIsAdmin(false);
         }
       }
-    } catch (err) {
+    } catch (error) {
+      console.log('User not authenticated');
       setUser(null);
       setIsAdmin(false);
     } finally {
@@ -54,32 +54,25 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const login = (userData, isAdminLogin = false) => {
-    if (isAdminLogin) {
-      setIsAdmin(true);
-      setUser(null);
-    } else {
-      setUser(userData);
-      setIsAdmin(false);
-    }
+  const login = (userData) => {
+    setUser(userData);
+    setIsAdmin(false);
     setLoading(false);
   };
 
   const logout = async () => {
     try {
-      await fetch(`${API}/user/logout`, {
+      await fetch('http://localhost:5000/user/logout', {
         method: 'POST',
-        credentials: 'include',
+        credentials: 'include'
       });
-
-      await fetch(`${API}/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-    } catch (_) {}
-
-    setUser(null);
-    setIsAdmin(false);
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setUser(null);
+      setIsAdmin(false);
+      setLoading(false);
+    }
   };
 
   const value = {
@@ -88,7 +81,7 @@ export const UserProvider = ({ children }) => {
     login,
     logout,
     isAdmin,
-    isAuthenticated: (!loading && (!!user || isAdmin)),
+    isAuthenticated: (!loading && (!!user || isAdmin))
   };
 
   return (
