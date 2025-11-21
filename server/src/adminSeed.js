@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import Admin from "./models/Admin.js";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/petcare";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://ravibharathi:Ravi2011@cluster0.lprr79i.mongodb.net/petcare";
 
 async function seedAdmin() {
   try {
