@@ -14,86 +14,57 @@ import userAuthRoutes from "./routes/userAuth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Load .env file
-dotenv.config({ path: path.join(__dirname, "../.env") });
+const envPath = path.resolve(__dirname, "../.env");
+dotenv.config({ path: envPath, override: true }); // ensure we load server/.env explicitly
 
 const app = express();
 
-/* -------------------------------------------------
-   🔥 CORS FIX FOR RENDER (CRUCIAL FOR COOKIE LOGIN)
----------------------------------------------------- */
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", process.env.CLIENT_URL || "https://pet-care-services-directory-client.onrender.com");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") return res.sendStatus(200);
-  next();
-});
-
-/* -------------------------------
-   Standard CORS
--------------------------------- */
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "https://pet-care-services-directory-client.onrender.com",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  })
-);
-
-/* -------------------------------
-   Middleware
--------------------------------- */
+// Middleware
+app.use(cors({
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  credentials: true
+}));
 app.use(cookieParser());
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
-/* -------------------------------
-   Debug Logs
--------------------------------- */
-console.log("🔍 CLIENT_URL =", process.env.CLIENT_URL);
+// Debugging log
+console.log("🔍 ENV PATH =", envPath);
+console.log("🔍 CWD =", process.cwd());
 console.log("🔍 MONGO_URI =", MONGO_URI);
-console.log("🔍 NODE_ENV =", process.env.NODE_ENV);
 
-/* -------------------------------
-   Database Connection
--------------------------------- */
 if (!MONGO_URI) {
-  console.error("❌ ERROR: MONGO_URI is missing");
-  process.exit(1);
+  console.error("❌ MONGO_URI is missing in .env file");
+  process.exit(1); // stop server if no DB URI
 }
 
-mongoose
-  .connect(MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => {
-    console.error("❌ MongoDB Error:", err);
-    process.exit(1);
-  });
+// Connect to MongoDB
+const connectDB = async () => {
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log("✅ MongoDB Connected");
+  } catch (err) {
+    console.error("❌ DB connection error:", err);
+    process.exit(1); // exit if DB connection fails
+  }
+};
 
-/* -------------------------------
-   Routes
--------------------------------- */
+connectDB();
+
+// Routes
 app.use("/services", serviceRoutes);
 app.use("/analytics", analyticsRoutes);
-app.use("/auth", authRoutes); // Admin auth
-app.use("/user", userAuthRoutes); // User auth
+app.use("/auth", authRoutes);
+app.use("/user", userAuthRoutes);
 
-/* -------------------------------
-   Root Route
--------------------------------- */
+// Simple route
 app.get("/", (req, res) => {
   res.send("🚀 Pet Care API is running...");
 });
 
-/* -------------------------------
-   Start Server
--------------------------------- */
+// Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
