@@ -18,7 +18,7 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET || "your-super-secret-jwt-key-here", { expiresIn: "1d" });
+    const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET || "super_secret_key_123", { expiresIn: "1d" });
     res.cookie("token", token, { httpOnly: true });
     res.json({ message: "Login successful", token });
   } catch (err) {
@@ -72,7 +72,7 @@ router.get('/google/callback',
       // Generate JWT token for the authenticated admin
       const token = jwt.sign(
         { id: req.user._id },
-        process.env.JWT_SECRET || "your-super-secret-jwt-key-here",
+        process.env.JWT_SECRET || "super_secret_key_123",
         { expiresIn: "1d" }
       );
       
