@@ -18,7 +18,7 @@ router.post("/track", async (req, res) => {
     const token = req.cookies.userToken;
     if (token) {
       try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || "your-super-secret-jwt-key-here");
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || "super_secret_key_123");
         if (decoded.type === 'user') {
           const user = await User.findById(decoded.id);
           if (user) {
