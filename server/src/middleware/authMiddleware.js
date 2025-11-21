@@ -5,7 +5,7 @@ export const authMiddleware = (req, res, next) => {
   if (!token) return res.status(401).json({ message: "Unauthorized" });
 
   try {
-    const secret = process.env.JWT_SECRET || "your-super-secret-jwt-key-here";
+    const secret = process.env.JWT_SECRET || "super_secret_key_123";
     const decoded = jwt.verify(token, secret);
     req.admin = decoded;
     next();
